@@ -1,28 +1,28 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import jsonPlaceholder from "../api/jsonPlaceholder";
 
-class ResourceList extends React.Component {
-  state = { resources: [] };
-  async componentDidMount() {
-    const response = await jsonPlaceholder.get(`/${this.props.resource}`);
-    this.setState({ resources: response.data });
-  }
+const ResourceList = ({ resource }) => {
+  const [resources, setResources] = useState([]);
 
-  async componentDidUpdate(prevProps) {
-    if (prevProps.resource !== this.props.resource) {
-      const response = await jsonPlaceholder.get(`/${this.props.resource}`);
-      this.setState({ resources: response.data });
-    }
-  }
+  useEffect(() => {
+    (async resource => {
+      const response = await jsonPlaceholder.get(`/${resource}`);
+      setResources(response.data);
+    })(resource);
+  }, [resource]);
 
-  render() {
-    return (
-      <div className="ui bulleted list">
-        <div className="item">{this.state.resources.length}</div>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="ui bulleted list">
+      {resources.map(item => {
+        return (
+          <div className="item" key={item.id}>
+            {item.title}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 export default ResourceList;
