@@ -1,17 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-import jsonPlaceholder from "../api/jsonPlaceholder";
+import useResources from "../utils/useResources";
 
 const ResourceList = ({ resource }) => {
-  const [resources, setResources] = useState([]);
-
-  useEffect(() => {
-    (async resource => {
-      const response = await jsonPlaceholder.get(`/${resource}`);
-      setResources(response.data);
-    })(resource);
-  }, [resource]);
-
+  const resources = useResources(resource);
   return (
     <div className="ui bulleted list">
       {resources.map(item => {
